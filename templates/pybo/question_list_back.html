@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}  <!-- 로드 스테틱은 무조건 스테틱 불러오기 맨 앞에 , css, js, images 로딩 최상단에 위치 -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <title>Title</title>
+</head>
+<body>
+
+    <ul>
+        {% if question_list %}
+            {% for question in question_list %}
+                {# http://127.0.0.1:8000/pybo/1 #}
+                <li><a href="{% url 'pybo:detail' question.id %}">{{question.subject}}</a>, {{question.create_date|date:"Y-m-d"}}</li>
+            {% endfor %}
+        {% else %}
+            <p>질문이 없습니다.</p>
+        {% endif %}
+    </ul>
+    {% csrf_token %}
+
+</body>
+</html>
