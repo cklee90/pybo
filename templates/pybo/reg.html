@@ -1,20 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    {% load static %}  <!-- 로드 스테틱은 무조건 스테틱 불러오기 맨 앞에 , css, js, images 로딩 최상단에 위치 -->
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <!-- Bootstrap  -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content%}
+
 <!-- 전체 container   -->
 <div class="container">
     <!--제목-->
     <div class="text-start mb-5">
-        <h2>질문 등록</h2>
+        <h2 class="border-bottom py-2">질문 등록</h2>
     </div>
     <!--        제목 end-->
             <!--            button-->
@@ -50,5 +41,4 @@
 
 
 <!-- 전체 container end  -->
-</body>
-</html>
+{% endblock %}

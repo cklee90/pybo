@@ -5,8 +5,11 @@
 <div class="container">
     <!--제목-->
     <div class="text-start mb-5">
-        <h2 class="border-bottom py-2">질문 목록</h2>
+        <h2 class="border-bottom py-2">CGV 무비차트</h2>
     </div>
+    {{title}}<br>
+    {{reserv}}<br>
+    {{poster}}
     <!--        제목 end-->
 
     <!--        검색 form-->
@@ -51,15 +54,21 @@
             </tr>
         </thead>
         <tbody>
-            {% for question in question_list %}
-            <tr>
-                <td class="text-center">{{question.id}}</td> <!--가운데 정렬-->
-                <td><a href="{% url 'pybo:detail' question.id %}">{{question.subject}}</a></td> <!--왼쪽 정렬-->
-                <td class="text-center">{{question.content}}</td>
-                <td class="text-center">{{question.create_date}}</td>
-                <td class="text-end">1</td>     <!--오른쪽 정렬-->
-            </tr>
+            {% if title %}
+            {% for t in title %}
+                <tr>
+                    <td class="text-center">1</td> <!--가운데 정렬-->
+                    <td>{{t}}</a></td> <!--왼쪽 정렬-->
+                    <td class="text-center">{{question.content}}</td>
+                    <td class="text-center">{{question.create_date}}</td>
+                    <td class="text-end">1</td>     <!--오른쪽 정렬-->
+                </tr>
             {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="99">no data found.</td>
+                </tr>
+            {% endif%}
         </tbody>
     </table>
 </div>
