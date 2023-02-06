@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+	'common.apps.CommonConfig',
     'pybo.apps.PyboConfig',  # /Users/ckair/projects/mysite/pybo/apps.py
     'django.contrib.admin',
     'django.contrib.auth',

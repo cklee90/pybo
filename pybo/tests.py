@@ -2,8 +2,18 @@ import logging
 import unittest
 import datetime
 import requests
+import pyperclip  # 클립보드를 쉽겍 활용할수 있게 해주는 모듈
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys     # 컨트롤 c 컨트롤 v
+
+
+
+import time
+from selenium.webdriver import *
 
 
 from django.test import TestCase
@@ -11,11 +21,85 @@ from django.test import TestCase
 # Create your tests here.
 class Crawling(unittest.TestCase):
     def setUp(self):
+        #webdriver Firefox 객체 생성
+        self.browser = webdriver.Firefox(executable_path='/Users/ckair/Desktop/Dev/big_ai0102/01_python_basic/app/geckodriver')
         logging.info('setUp')
 
     def tearDown(self):
         logging.info('tearDown')
+        #self.browser.quit()    # webdriver 종료
 
+
+    @unittest.skip
+    def test_selenium(self):    # Selenium 사용
+        #Firefox 웹 드라이버 객체에게 Get을 통하여 네이버의 http 요청을 하게 함
+        self.browser.get('http://127.0.0.1:8000/pybo/5')
+        print('self.browser.title:{}'.format(self.browser.title))
+        self.assertIn('Pybo',self.browser.title)
+
+        content_textarea = self.browser.find_element(By.ID,'content')
+        content_textarea.send_keys('안녕하세요. 셀레니움 테스트입니다. ')
+        content_button = self.browser.find_element(By.ID, 'answer_reg')
+        content_button.click()  # 버튼 클릭
+
+    def test_clipboard_naver(self):
+        '''clipboard 를 통한 naver login'''
+        self.browser.get('http://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com')
+        user_id = 'mushu444'
+        user_pw = 'Fkdtns23!@#'
+
+        #id
+        id_textinput = self.browser.find_element(By.ID,'id')
+        id_textinput.click()
+        #클립보드로 copy
+        pyperclip.copy(user_id)
+        id_textinput.send_keys(Keys.COMMAND,'v')  # 클립보드에서 id_textinput 으로 copy
+        time.sleep(1)
+
+        #password
+        pw_textinput = self.browser.find_element(By.ID,'pw')
+        pw_textinput.click()
+        pyperclip.copy(user_pw)
+        pw_textinput.send_keys(Keys.COMMAND,'v')
+        time.sleep(1)
+
+        #로그인버튼
+        btn_login = self.browser.find_element(By.ID,'log.login')
+        btn_login.click()
+
+
+    @unittest.skip
+    def test_loginNaver(self):    # Selenium 사용
+        self.browser.get('http://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com')
+        user_id = 'mushu444'
+        user_pw = 'Fkdtns23!@#'
+        content_id = self.browser.find_element(By.ID,'id')
+        content_id.click()
+        time.sleep(3)
+        pyperclip.copy(user_id)
+        pyperclip.paste()
+        content_pw = self.browser.find_element(By.ID,'pw')
+        content_pw.click()
+        time.sleep(3)
+        pyperclip.copy(user_id)
+        pyperclip.paste()
+        content_button = self.browser.find_element(By.ID,'log.login')
+        content_button.click()
+
+
+
+    @unittest.skip
+    def test_zip(self):
+        ''' 여러개의 list를 묶어서 하나의 iteration 객체로 다룰수 있게 한다.'''
+        integers = [1,2,3]
+        letters = ['a','b','c']
+        floats = [4.0, 8.0, 10.0]
+        zipped = zip(integers, letters, floats)
+        list_data = list(zipped)
+        print(('list_data:{}'.format(list_data)))
+        print(list_data[1][1])
+
+    @unittest.skip
     def test_naver_stock(self):
         '''주식 크롤링'''
         #https://finance.naver.com/item/main.naver?code=005930

@@ -7,75 +7,26 @@
     <div class="text-start mb-5">
         <h2 class="border-bottom py-2">CGV 무비차트</h2>
     </div>
-    {{title}}<br>
-    {{reserv}}<br>
-    {{poster}}
-    <!--        제목 end-->
+            {% if context %}
+    <div class="row">
+            {% for t,r,p in context %}
+                    <div class="card col-3 p-3 m-2" style="width: 18rem;">
+                        <img src="{{p}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{t}}, {{r}}</h5>
+                            <p class="card-text"></p>
+                            <a href="#" class="btn btn-primary">예매하기</a>
+                        </div>
+                    </div>
 
-    <!--        검색 form-->
-
-        <form action="#" class="col-sm-11 col-md-11 col-lg-11 text-end">
-            <select class="form-select-sm" aria-label="Default select example">
-                <option selected value="">전체</option>
-                <option value="10">제목</option>
-                <option value="20">내용</option>
-                <option value="30">작성자</option>
-            </select>
-            <input type="text" class="form-control-sm" placeholder="검색어">
-            <select class="form-select-sm" aria-label="Default select example">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </form>
-        <!--            검색 form-->
-            <!--            button-->
-        <div class="d-grid gap-2 d-md-flex justify-content-end">
-            <input type="button" class="btn btn-outline-primary btn-sm" value="조회">
-            <input type="button" class="btn btn-outline-success btn-sm" value="검색">
-        </div>
-        <!--            button end-->
-
-    </div>
-    <!--        검색, 버튼 end -->
-
-<!--    table-->
-<div class="container">
-    <table class="table table-striped table-hover table-bordered table-sm">
-        <thead>
-            <tr class="table-dark">
-                <th scope="col" class="text-center">No.</th>
-                <th scope="col" class="text-center">제목</th>
-                <th scope="col" class="text-center">내용</th>
-                <th scope="col" class="text-center">작성일</th>
-                <th scope="col" class="text-center">조회수</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if title %}
-            {% for t in title %}
-                <tr>
-                    <td class="text-center">1</td> <!--가운데 정렬-->
-                    <td>{{t}}</a></td> <!--왼쪽 정렬-->
-                    <td class="text-center">{{question.content}}</td>
-                    <td class="text-center">{{question.create_date}}</td>
-                    <td class="text-end">1</td>     <!--오른쪽 정렬-->
-                </tr>
             {% endfor %}
+    </div>
             {% else %}
-                <tr>
+                <p>
                     <td colspan="99">no data found.</td>
-                </tr>
+                </p>
             {% endif%}
-        </tbody>
-    </table>
-</div>
-<!--    table end-->
-
-<!-- pagination -->
-<div class="d-grid gap-2 d-md-flex justify-content-center">
+    <div class="d-grid gap-2 d-md-flex justify-content-center">
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
@@ -83,9 +34,9 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="1">1</a></li>
+            <li class="page-item"><a class="page-link" href="2">2</a></li>
+            <li class="page-item"><a class="page-link" href="3">3</a></li>
             <li class="page-item">
                 <a class="page-link" href="#" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
@@ -94,7 +45,8 @@
         </ul>
     </nav>
 </div>
-<!-- pagination end -->
+</div>
 
-<!-- 전체 container end  -->
+
+
 {% endblock %}

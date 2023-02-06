@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load pybo_filter %}  <!--사용자 정의 필터 로드 -->
 {% block content%}
 
 <!-- 전체 container   -->
@@ -27,8 +28,13 @@
         {% if question_list %}
             {% for question in question_list %}
             <tr>
-                <td class="text-center">{{question.id}}</td> <!--가운데 정렬-->
-                <td><a href="{% url 'pybo:detail' question.id %}">{{question.subject}}</a></td> <!--왼쪽 정렬-->
+<!--                일련번호 = 전체 글수 - 시작인덱스 - 현재 인덱스 + 1 -->
+                <td class="text-center">{{question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1}}</td> <!--가운데 정렬-->
+                <td><a href="{% url 'pybo:detail' question.id %}">{{question.subject}}</a>
+                    {% if question.answer_set.count > 0 %}   <!--답변이 있는 경우-->
+                        <span class="text-danger small mx-2">{{question.answer_set.count}}</span>
+                    {% endif %}
+                </td> <!--왼쪽 정렬-->
                 <td class="text-center">{{question.content}}</td>
                 <td class="text-center">{{question.create_date|date:"Y-m-d"}}</td>
                 <td class="text-end">1</td>     <!--오른쪽 정렬-->
@@ -49,24 +55,48 @@
 <div class="d-grid gap-2 d-md-flex justify-content-center">
     <nav aria-label="Page navigation example">
         <ul class="pagination">
+<!--            이전 페이지-->
+            {% if question_list.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
+                <a class="page-link" href="?page={{question_list.previous_page_number}}">&laquo;</a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" aria-disabled="true" href="#">&laquo;</a>
+            </li>
+            {% endif %}
+
+<!--            페이지 리스트 paginator.page_range-->
+            {% for page_number in question_list.paginator.page_range %}
+            <!--현재 선택 페이지와 나머지-->
+<!--            페이지 번호가 현재 페이지 기준으로 좌우 5개씩 보이도록 처리-->
+                {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+                {% if page_number == question_list.number %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{page_number}}</a>
+                </li>
+                {% else %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="?page={{page_number}}">{{page_number}}</a>
+                </li>
+                {% endif %}
+                {% endif %}
+            {% endfor %}
+<!--            다음 페이지 -->
+            {% if question_list.has_next %}
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
+                <a class="page-link" href="?page={{question_list.next_page_number}}">&raquo;</a>
             </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" aria-disabled="true" href="#">&raquo;</a>
+            </li>
+            {% endif %}
         </ul>
     </nav>
 </div>
-</div>
-<!-- pagination end -->
 
+<!-- pagination end -->
+</div>
 <!-- 전체 container end  -->
 {% endblock %}
