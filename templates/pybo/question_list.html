@@ -19,7 +19,7 @@
             <tr class="table-dark">
                 <th scope="col" class="text-center">No.</th>
                 <th scope="col" class="text-center">제목</th>
-                <th scope="col" class="text-center">내용</th>
+                <th scope="col" class="text-center">글쓴이</th>
                 <th scope="col" class="text-center">작성일</th>
                 <th scope="col" class="text-center">조회수</th>
             </tr>
@@ -30,12 +30,12 @@
             <tr>
 <!--                일련번호 = 전체 글수 - 시작인덱스 - 현재 인덱스 + 1 -->
                 <td class="text-center">{{question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1}}</td> <!--가운데 정렬-->
-                <td><a href="{% url 'pybo:detail' question.id %}">{{question.subject}}</a>
+                <td style="width:50%"><a href="{% url 'pybo:detail' question.id %}">{{question.subject}}</a>
                     {% if question.answer_set.count > 0 %}   <!--답변이 있는 경우-->
                         <span class="text-danger small mx-2">{{question.answer_set.count}}</span>
                     {% endif %}
                 </td> <!--왼쪽 정렬-->
-                <td class="text-center">{{question.content}}</td>
+                <td class="text-center">{{question.author.username}}</td>
                 <td class="text-center">{{question.create_date|date:"Y-m-d"}}</td>
                 <td class="text-end">1</td>     <!--오른쪽 정렬-->
             </tr>

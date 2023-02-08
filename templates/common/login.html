@@ -8,6 +8,7 @@
     </div>
     <form action="{% url 'common:login' %}" method="post">
       {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}"> <!--로그인 성공시 이동할 다음 URL-->
 <!--        form validation-->
         {% include "form_errors.html" %}
         <div class="mb-3 row">
@@ -25,7 +26,7 @@
             </label>
         </div>
         <div class="d-grid gap-2 mb-1 d-md-flex justify-content-start">
-            <input type="button" class="btn btn-outline-primary" value="로그인">
+            <input type="submit" class="btn btn-outline-primary" value="로그인">
         </div>
     </form>
 </div>

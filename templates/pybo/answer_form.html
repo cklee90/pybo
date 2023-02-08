@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- 전체 container   -->
+<div class="container">
+      <!--제목-->
+    <div class="text-start mb-5">
+        <h2>답변 수정</h2>
+    </div>
+
+    <form method="post" class="post-form my-3">
+        {% csrf_token %}
+        {% include "form_errors.html" %}
+        <div class="mb-3">
+            <label for="content" class="col-form-label">답변내용</label>
+            <div>
+                <textarea name="content" id="content" cols="30" rows="10"
+                          class="form-control">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-primary btn-sm">저장</button>
+    </form>
+    
+
+</div>
+{% endblock %}
