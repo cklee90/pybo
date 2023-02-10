@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load pybo_filter %}
 {% block content %}
 
 <!--전체를 감싸고있는 container-->
@@ -20,7 +21,7 @@
           </div>
           {% endif %}
           <!--          message 표시 end-->
-          <div class="card-text" style="white-space pre-line;">{{question.content}}</div>
+          <div class="card-text" >{{ question.content|mark }}</div>
 
           <div class="d-flex justify-content-end">
 <!--              수정 이벤트 발생시 수정일 표시-->
@@ -38,6 +39,12 @@
           </div>
 <!--          질문 수정-->
           <div class="my-3">
+<!--              좋아요-->
+              <a href="javascript:void(0);"
+                 data-uri="{% url 'pybo:question_vote' question.id %}" class="recommend btn btn-outline-secondary btn-sm">
+                  좋아요<span class="badge rounded-pill bg-danger">{{ question.voter.count }}</span>
+              </a>
+
               {% if question.author == request.user %}   <!--글쓴이와 로그인한 사용자가 동일 하면-->
               <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
               <a href="javascript:void(0);" data-uri="{% url 'pybo:question_delete' question.id %}" class="delete btn btn-outline-secondary btn-sm">삭제</a>
@@ -51,6 +58,8 @@
 
       {% for answer in question.answer_set.all %}
       <div class="card my-3">
+<!--          answer_+answer.id 를 붙여서 나중에 조회 및 이동 가능하도록 만들기 -->
+          <a id="answer_{{answer.id}}"></a>
           <div class="card-text" style="white-space pre-line;">{{answer.content}}</div>
 
           <div class="d-flex justify-content-end">
@@ -68,10 +77,17 @@
               </div>
           </div>
           <div class="my-3">
+              <a href="javascript:void(0);"
+                 data-uri="{% url 'pybo:answer_vote' answer.id %}" class="recommend btn btn-outline-secondary btn-sm">
+                  좋아요<span class="badge rounded-pill bg-danger">{{ answer.voter.count }}</span>
+              </a>
+
+              {% if request.user == answer.author %} <!--본인 글만 수정 삭제-->
               <a href="{% url 'pybo:answer_modify' answer.id %}" class="btn btn-outline-secondary">수정</a>
               <a href="#" class="delete btn btn-outline-secondary"
                 data-uri="{% url 'pybo:answer_delete' answer.id %}"
               >삭제</a>
+              {% endif %}
           </div>
       </div>
       {% endfor %}
@@ -97,7 +113,8 @@
 {% endblock %}
 
 {% block script %}
-      <script>
+
+<script>
         //삭제 : getElementsByClassName 'delete' 클래스 이름으로 element 찾기
         //const delete_elements = document.getElementsByClassName("delete");
         // querySelectorAll 을 해야 배열로 들어옴
@@ -117,20 +134,23 @@
             });
         });
 
+        //question: 좋아요
+        const recommend_elements = document.querySelectorAll(".recommend");
 
-        function doSave(){
-            <!--console.log('doSave');-->
-            let form = document.answer_form;
-            let content = form.content.value;
-            console.log('content'+content);
-            if(isEmpty(content)==true) {
-                alert('내용을 입력하세요.');
-                form.content.focus();
-                return;
-            }
-            //서버로 전송
-            form.submit();
-        }
+        Array.from(recommend_elements).forEach(function(element){
+            //click event 감지
+            element.addEventListener('click', function() {
+                console.log('좋아요 버튼 잘 눌림');
+                if(confirm('좋아요 하시겠습니까?')) {
+                    console.log('this.dataset.uri: ' + this.dataset.uri)
+                    location.href = this.dataset.uri
+                }
+            });
+
+        });
+
+
 </script>
+
 
 {% endblock %}

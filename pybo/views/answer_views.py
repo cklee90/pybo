@@ -9,12 +9,24 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
 
 from ..forms import AnswerForm
 from ..models import Question, Answer
 
+@login_required(login_url='common:login')
+def answer_vote(request, answer_id):
+    '''답변 좋아요'''
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.user == answer.author:
+        messages.error(request, '본인이 작성한 댓글에 좋아요 할수 없습니다.')
+    else:
+        answer.voter.add(request.user)
+
+    # http://127.0.0.1:8000/pybo/543/#answer_46
+    return redirect('{}#answer_{}'.
+                    format(resolve_url('pybo:detail', question_id=answer.question.id), answer.id))
 
 @login_required(login_url='common:login')
 def answer_delete(request, answer_id):
@@ -24,7 +36,7 @@ def answer_delete(request, answer_id):
         messages.error(request, '삭제 권한이 없습니다')
     else:
         answer.delete()
-    return redirect('pybo:detail',question_id = answer.question.id)
+    return redirect('pybo:detail', question_id = answer.question.id)
 
 @login_required(login_url='common:login')
 def answer_modify(request, answer_id):
@@ -53,7 +65,10 @@ def answer_modify(request, answer_id):
             logging.info('3. answer.form.is_valid:{}'.format(answer))
             answer.save()
             # 수정화면 보내기
-            return redirect('pybo:detail', question_id=answer.question.id)
+            #http://127.0.0.1:8000/pybo/543/#answer_46
+            return redirect('{}#answer_{}'.
+                            format(resolve_url('pybo:detail',question_id = answer.question.id),answer.id))
+
 
     else:                          # 수정 form 의 template 을 띄워줌
         form = AnswerForm(instance=answer)
@@ -75,9 +90,12 @@ def answer_create(request, question_id):
             answer.author = request.user
             logging.info('3. answer.author:{}'.format(answer.author))
             answer.save()
-            return redirect('pybo:detail', question_id = question.id)
+            #http://127.0.0.1:8000/pybo/543/#answer_46
+            return redirect('{}#answer_{}'.
+                            format(resolve_url('pybo:detail',question_id = question.id),answer.id))
     else:
         form = AnswerForm()
+
 
     # form validation
     context = {'question':question,'form':form}

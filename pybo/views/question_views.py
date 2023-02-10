@@ -18,6 +18,18 @@ from ..models import Question
 #큰트롤 알트 o  ; 임포트 정리
 
 @login_required(login_url='common:login')
+def question_vote(request, question_id):
+    logging.info('좋아요 호출 :{}'.format(question_id))
+    question = get_object_or_404(Question, pk=question_id)
+
+    #본인 글은 추천 하지 못하게
+    if request.user == question.author:
+        messages.error(request, '본인이 작성한 글은 추천 할 수 없습니다.')
+    else:
+        question.voter.add(request.user)
+    return redirect('pybo:detail', question_id=question.id)
+
+@login_required(login_url='common:login')
 def question_delete(request, question_id):
     ''' 질문 삭제 '''
     logging.info('1. question_delete')
