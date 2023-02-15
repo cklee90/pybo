@@ -6,7 +6,7 @@
 '''
 
 from django.urls import path
-from .views import base_views, question_views, answer_views, boot_views
+from .views import base_views, question_views, answer_views, boot_views, board_views
 
 
 app_name = 'pybo'
@@ -34,4 +34,12 @@ urlpatterns = [
     path('boot/reg/',boot_views.boot_reg, name='boot_reg'),
     #crawling
     path('crawling/cgv/',boot_views.crawling_cgv, name='crawling_cgv'),
+
+    #board
+    path('board/list/',board_views.board_list, name='board_list'),
+    path('board/list/<int:board_id>/', board_views.board_detail, name='board_detail'),
+    path('board/create/', board_views.board_create, name='board_create'),
+    path('board/modify/<int:board_id>/', board_views.board_modify, name='board_modify'),
+    path('board/delete/<int:board_id>/', board_views.board_delete, name='board_delete'),
+
 ]
