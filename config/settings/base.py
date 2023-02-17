@@ -93,9 +93,9 @@ DATABASES = {
     'default': {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': 'aproject_db',
-		'USER': 'root',
-		'PASSWORD': '12345678',
-		'HOST': 'localhost',
+		'USER': 'aproject_db_dba',
+		'PASSWORD': 'Fkdtns23!@#',
+		'HOST': 'ls-e2707e60f648ea2d42f139c5ba74d5e761beaa9d.cdk87vifo1dp.ap-northeast-2.rds.amazonaws.com',
 		'PORT': '3306',
     }
 }
